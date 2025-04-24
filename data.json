@@ -1,0 +1,23 @@
+{
+  "parts": [
+    { "id": "60140", "drawer": 1, "box": "A1" },
+    { "id": "72995", "drawer": 1, "box": "A2" },
+    { "id": "423278", "drawer": 1, "box": "A3" },
+    { "id": "430438", "drawer": 1, "box": "A4" },
+    { "id": "430438", "drawer": 1, "box": "A5" },
+    { "id": "431266", "drawer": 1, "box": "A6" },
+    { "id": "431298", "drawer": 1, "box": "A7" },
+    { "id": "431884", "drawer": 1, "box": "A8" },
+    { "id": "431900", "drawer": 1, "box": "A9" },
+    { "id": "431904", "drawer": 1, "box": "A10" },
+    { "id": "431910", "drawer": 1, "box": "A11" },
+    { "id": "432082", "drawer": 1, "box": "A13" }
+
+  ],
+  "drawers": {
+    "1": { "rows": 6, "cols": 11 },
+    "2": { "rows": 6, "cols": 11 },
+    "3": { "rows": 8, "cols": 8 },
+    "4": { "rows": 8, "cols": 8 }
+  }
+}
