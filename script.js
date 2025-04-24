@@ -1,34 +1,28 @@
 async function searchPart() {
   const partInput = document.getElementById("partId");
-  const partId = partInput.value.trim(); // Oříznutí bílých znaků
+  const partId = partInput.value;
 
   if (!partId) {
-    alert("Zadejte ID dílu."); // Upozornění, pokud pole je prázdné
+    alert("Zadejte ID dílu.");
     partInput.focus();
     return;
   }
 
   try {
-    // Odeslání požadavku na backend
-    const response = await fetch(`http://localhost:5000/search?partId=${partId}`, {
-      method: "GET",
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP chyba! Status: ${response.status}`);
-    }
-
+    const response = await fetch(`http://localhost:5000/search?partId=${partId}`);
     const results = await response.json();
 
-    if (results.length > 0) {
-      // Zpracování výsledků
+    if (response.ok && results.length > 0) {
+      // Vytvoření HTML pro zobrazení všech nalezených míst
       let resultHTML = results.map(
-        (result) => `<p>Šuplík: ${result.drawer}, Krabička: ${result.box}</p>`
+        (result) => `
+          <p>Šuplík: ${result.drawer}, Krabička: ${result.box}</p>
+        `
       ).join("<hr>");
 
       document.getElementById("result").innerHTML = resultHTML;
 
-      // Vykreslení šuplíků
+      // Vytvoříme mapu šuplíků a krabiček k vykreslení
       const drawersMap = {};
       results.forEach((result) => {
         if (!drawersMap[result.drawer]) {
@@ -37,6 +31,7 @@ async function searchPart() {
         drawersMap[result.drawer].push(result.box);
       });
 
+      // Pro každý šuplík vykreslíme všechny zvýrazněné krabičky
       Object.keys(drawersMap).forEach((drawerId) => {
         renderDrawer(drawerId, drawersMap[drawerId]);
       });
@@ -45,17 +40,17 @@ async function searchPart() {
       document.getElementById("drawerView").innerHTML = "";
     }
   } catch (error) {
-    console.error("Chyba při vyhledávání:", error.message);
+    console.error("Chyba při vyhledávání:", error);
   }
 
-  partInput.value = ""; // Vyprázdnění vstupního pole
+  partInput.value = "";
   partInput.focus();
 }
 
 function renderDrawer(drawerId, highlightBoxes) {
   const drawerConfig = {
-    "1": { rows: 6, cols: 11 },
-    "2": { rows: 6, cols: 11 },
+    "1": { rows: 8, cols: 11 },
+    "2": { rows: 8, cols: 11 },
     "3": { rows: 8, cols: 8 },
     "4": { rows: 8, cols: 8 }
   };
@@ -63,10 +58,9 @@ function renderDrawer(drawerId, highlightBoxes) {
   const drawer = drawerConfig[drawerId];
   const drawerView = document.getElementById("drawerView");
 
-  // Vymazání předchozího zobrazení šuplíku
-  let drawerContainer = drawerView.querySelector(`.drawer-${drawerId}`);
-  if (!drawerContainer) {
-    drawerContainer = document.createElement("div");
+  // Pokud již existuje šuplík, vymažeme obsah pouze toho šuplíku, který právě renderujeme
+  if (!drawerView.querySelector(`.drawer-${drawerId}`)) {
+    const drawerContainer = document.createElement("div");
     drawerContainer.className = `drawer drawer-${drawerId}`;
     drawerContainer.style.display = "grid";
     drawerContainer.style.gridTemplateRows = `repeat(${drawer.rows}, 1fr)`;
@@ -76,16 +70,20 @@ function renderDrawer(drawerId, highlightBoxes) {
     drawerView.appendChild(drawerContainer);
   }
 
+  const drawerContainer = drawerView.querySelector(`.drawer-${drawerId}`);
   drawerContainer.innerHTML = "";
 
-  // Vykreslení krabiček
-  for (let row = 1; row <= drawer.rows; row++) {
+  const boxes = [];
+  for (let row = drawer.rows; row >= 1; row--) {
     for (let col = 1; col <= drawer.cols; col++) {
-      const boxId = `A${(row - 1) * drawer.cols + col}`;
-      const boxElement = document.createElement("div");
-      boxElement.className = `box ${highlightBoxes.includes(boxId) ? "highlight" : ""}`;
-      boxElement.textContent = boxId;
-      drawerContainer.appendChild(boxElement);
+      boxes.push(`A${(row - 1) * drawer.cols + col}`);
     }
   }
+
+  boxes.forEach((boxId) => {
+    const boxElement = document.createElement("div");
+    boxElement.className = `box ${highlightBoxes.includes(boxId) ? "highlight" : ""}`;
+    boxElement.textContent = boxId;
+    drawerContainer.appendChild(boxElement);
+  });
 }

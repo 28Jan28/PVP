@@ -1,14 +1,48 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+input {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  width: 200px;
+}
+
+button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#result {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
 .drawer-view {
   display: grid;
-  width: 500px;
-  height: 400px;
-  grid-template-rows: repeat(8, 1fr);
-  grid-template-columns: repeat(11, 1fr);
-  gap: 5px;
+  width: 500px; /* Pevná šířka šuplíku */
+  height: 400px; /* Pevná výška šuplíku */
+  grid-template-rows: repeat(8, 1fr); /* Počet řádků odpovídá 8 */
+  grid-template-columns: repeat(11, 1fr); /* Počet sloupců odpovídá 11 */
+  gap: 5px; /* Stejná mezera mezi krabičkami ve všech směrech */
   background-color: #f9f9f9;
   border: 2px solid #ddd;
   margin: 20px auto;
+  position: relative;
 }
+
 .drawer-view .box {
   display: flex;
   align-items: center;
@@ -17,7 +51,11 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 12px;
+  box-sizing: border-box;
 }
+
 .drawer-view .box.highlight {
   background-color: #ffeb3b;
+  border-color: #fbc02d;
+  font-weight: bold;
 }
